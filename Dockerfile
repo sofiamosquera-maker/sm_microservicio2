@@ -1,30 +1,34 @@
+# Imagen base liviana
 FROM python:3.11-slim
 
-WORKDIR /app
-
+# Crear usuario y grupo no root
 RUN addgroup --system appgroup && adduser --system --group appuser
 
-# Instalar libpq para conexión con PostgreSQL
+# Directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias del sistema necesarias para PostgreSQL
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
-    postgresql-client \
+    gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar código de la aplicación
+# Copiar archivos de la aplicación
 COPY app.py .
 COPY models.py .
 COPY database.py .
+COPY requirements.txt .
 
+# Instalar dependencias Python
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Instala Flask
-RUN pip install flask
-RUN pip install requests
-
+# Cambiar permisos al usuario no root
 RUN chown -R appuser:appgroup /app
-
 USER appuser
-# Expone el puerto en el que corre la app
+
+# Exponer puerto del servicio
 EXPOSE 3000
 
-# Comando por defecto para ejecutar la app
-CMD ["python", "app.py"]
+# Comando de inicio
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "3000"]

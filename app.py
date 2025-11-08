@@ -1,14 +1,17 @@
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
 import logging
 
 from database import engine, get_db, Base
 from models import DataEntity
 
-# Crear las tablas
+# Inicializar app
+app = FastAPI(title="API de Datos con PostgreSQL")
+
+# Crear tablas
 Base.metadata.create_all(bind=engine)
 
-# Logging
+# Logging básico
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -28,6 +31,7 @@ def get_all_data(db: Session = Depends(get_db)):
         logger.error(f"Error al obtener datos: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/data/{data_id}")
 def get_data_by_id(data_id: int, db: Session = Depends(get_db)):
     """
@@ -43,6 +47,7 @@ def get_data_by_id(data_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         logger.error(f"Error al obtener dato {data_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/data/")
 def create_data(nombre: str, descripcion: str, db: Session = Depends(get_db)):
@@ -61,18 +66,23 @@ def create_data(nombre: str, descripcion: str, db: Session = Depends(get_db)):
         logger.error(f"Error al crear dato: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/health', methods=['GET'])
+
+@app.get("/health")
 def call_health():
-    return 'OK', 200
+    return {"status": "OK"}
 
-@app.route('/startup', methods=['GET'])
+
+@app.get("/startup")
 def call_startup():
-    return 'OK', 200
-    
-@app.route('/readiness', methods=['GET'])
+    return {"status": "OK"}
+
+
+@app.get("/readiness")
 def call_readiness():
-    return 'OK', 200
+    return {"status": "OK"}
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
 
+# Ejecutar con Uvicorn
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="0.0.0.0", port=3000, reload=True)
