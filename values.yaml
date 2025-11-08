@@ -1,5 +1,5 @@
 namespace: sofia-mosquera-dev
-name: backend_mservice
+name: backend-mservice
 
 metadata:
   labels:
