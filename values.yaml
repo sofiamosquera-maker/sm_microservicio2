@@ -35,5 +35,4 @@ configmap:
   user: "admin"
 
 secret:
-  # plain text password; template will base64-encode when placing into `data:`
-  password: "pass123456"
+  password: cGFzczEyMzQ1Ng==
