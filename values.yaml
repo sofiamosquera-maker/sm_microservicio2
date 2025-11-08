@@ -29,7 +29,7 @@ hpa:
   targetCPUUtilizationPercentage: 75
 
 configmap:
-  host: "postgres-service"
+  host: "my-postgresql.sofia-mosquera-dev.svc.cluster.local"
   port: "5432"
   database: "datosdb"
   user: "admin"
