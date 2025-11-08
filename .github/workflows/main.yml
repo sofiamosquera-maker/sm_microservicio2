@@ -73,5 +73,5 @@ jobs:
 
       - name: Deploy files
         run: |
-          helm show chart oci://registry-1.docker.io/sofiamosquera/sm-chart --version 3
-          helm upgrade --install backend-mservice oci://registry-1.docker.io/sofiamosquera/sm-chart --version 3 --values values.yaml
+          helm show chart oci://registry-1.docker.io/sofiamosquera/sm-chart --version 4
+          helm upgrade --install backend-mservice oci://registry-1.docker.io/sofiamosquera/sm-chart --version 4 --values values.yaml
