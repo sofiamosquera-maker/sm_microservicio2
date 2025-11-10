@@ -10,4 +10,5 @@ jobs:
     uses: sofiamosquera-maker/devops_pipelines/.github/workflows/docker-workflow.yml@main
     with:
       docker_image_name: image-backend
+      install_name: backend-mservice
     secrets: inherit
